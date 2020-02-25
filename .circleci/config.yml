@@ -1,9 +1,12 @@
 version: 2.1
 
 parameters:
-  branch-to-track:
+  branch_to_track:
     type: string
     default: "circleci"
+  s3_bucket:
+    type: string
+    default: "uzky-circleci-bucket"
 
 jobs:
   build:
@@ -48,6 +51,23 @@ jobs:
       - store_artifacts:
           path: target/store-webapp.jar
 
+      - prepare_for_s3_placement:
+          command: |
+            sudo apt-get install python3
+            sudo apt-get install python3-pip
+            sudo pip3 install awscli
+            sudo apt install zip
+
+      - send_build_to_s3:
+          command: |
+            aws configure set aws_access_key_id $CIRCLECI_FIRST_AWS_AKID
+            aws configure set aws_secret_access_key $CIRCLECI_FIRST_AWS_SAK
+
+            cd target/
+            zip store-webapp.jar.zip store-webapp.jar
+            aws s3 cp store-webapp.jar.zip s3://<< pipeline.parameters.s3_bucket >>/
+
+
 workflows:
   version: 2
   build-deploy:
@@ -56,4 +76,4 @@ workflows:
           filters:
             branches:
               only: 
-                - << pipeline.parameters.branch-to-track >>
+                - << pipeline.parameters.branch_to_track >>
