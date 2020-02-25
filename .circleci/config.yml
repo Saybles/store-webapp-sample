@@ -54,14 +54,14 @@ jobs:
       - run:
           name: Prepare for s3 placement
           command: |
-            sudo apt-get update
-            sudo apt install software-properties-common
-            sudo add-apt-repository ppa:jonathonf/python-3.6
-            sudo apt-get update
-            sudo apt-get install python3.6
-            sudo apt-get install python3-pip
-            sudo pip3 install awscli
-            sudo apt install zip
+            sudo apt-get update -y
+            sudo apt install software-properties-common -y
+            sudo add-apt-repository ppa:jonathonf/python-3.6 -y
+            sudo apt-get update -y
+            sudo apt-get install python3.6 -y
+            sudo apt-get install python3-pip -y
+            sudo pip3 install awscli -y
+            sudo apt install zip -y
 
       - run:
           name: Send build to s3
