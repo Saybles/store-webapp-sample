@@ -7,9 +7,9 @@ parameters:
 
 jobs:
   build:
-    branches:
-      only: 
-        - << pipeline.parameters.branch-to-track >>
+    # branches:
+    #   only: 
+    #     - << pipeline.parameters.branch-to-track >>
     
     working_directory: ~/store-webapp-sample
 
@@ -47,3 +47,13 @@ jobs:
       
       - store_artifacts:
           path: target/store-webapp.jar
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: 
+                - << pipeline.parameters.branch-to-track >>
