@@ -68,12 +68,12 @@ jobs:
             aws s3 cp store-webapp.jar.zip s3://<< pipeline.parameters.s3_bucket >>/
 
 
-workflows:
-  version: 2
-  build-deploy:
-    jobs:
-      - build:
-          filters:
-            branches:
-              only: 
-                - << pipeline.parameters.branch_to_track >>
+# workflows:
+#   version: 2
+#   build-deploy:
+#     jobs:
+#       - build:
+#           filters:
+#             branches:
+#               only: 
+#                 - << pipeline.parameters.branch_to_track >>
