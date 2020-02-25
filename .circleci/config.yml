@@ -1,6 +1,8 @@
 version: 2.1
 jobs:
   build:
+    branches:
+      only: $BRANCH_TO_TRACK
     
     working_directory: ~/store-webapp-sample
 
