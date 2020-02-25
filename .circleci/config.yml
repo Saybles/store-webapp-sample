@@ -1,8 +1,15 @@
 version: 2.1
+
+parameters:
+  branch-to-track:
+    type: string
+    default: "circleci"
+
 jobs:
   build:
     branches:
-      only: $BRANCH_TO_TRACK
+      only: 
+        - << pipeline.parameters.circleci >>
     
     working_directory: ~/store-webapp-sample
 
