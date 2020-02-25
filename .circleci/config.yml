@@ -9,7 +9,7 @@ jobs:
   build:
     branches:
       only: 
-        - << pipeline.parameters.circleci >>
+        - << pipeline.parameters.branch-to-track >>
     
     working_directory: ~/store-webapp-sample
 
