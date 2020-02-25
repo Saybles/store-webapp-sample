@@ -55,12 +55,9 @@ jobs:
           name: Prepare for s3 placement
           command: |
             sudo apt-get update -y
-            sudo apt install software-properties-common -y
-            sudo add-apt-repository ppa:deadsnakes/ppa -y
-            sudo apt-get update -y
-            sudo apt-get install python3.6 -y
-            sudo apt-get install python3-pip -y
-            sudo pip3 install awscli -y
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
             sudo apt install zip -y
 
       - run:
