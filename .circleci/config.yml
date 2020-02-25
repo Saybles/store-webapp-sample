@@ -54,7 +54,7 @@ jobs:
       - run:
           name: Prepare for s3 placement
           command: |
-            sudo apt-get install python3
+            sudo apt-get install python3.6
             sudo apt-get install python3-pip
             sudo pip3 install awscli
             sudo apt install zip
