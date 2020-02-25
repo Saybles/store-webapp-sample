@@ -51,14 +51,16 @@ jobs:
       - store_artifacts:
           path: target/store-webapp.jar
 
-      - prepare_for_s3_placement:
+      - run:
+          name: Prepare for s3 placement
           command: |
             sudo apt-get install python3
             sudo apt-get install python3-pip
             sudo pip3 install awscli
             sudo apt install zip
 
-      - send_build_to_s3:
+      - run:
+          name: Send build to s3
           command: |
             aws configure set aws_access_key_id $CIRCLECI_FIRST_AWS_AKID
             aws configure set aws_secret_access_key $CIRCLECI_FIRST_AWS_SAK
