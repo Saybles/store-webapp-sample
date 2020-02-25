@@ -1,0 +1,37 @@
+version: 2.1
+jobs:
+  build:
+    
+    working_directory: ~/store-webapp-sample
+
+    docker:
+      - image: circleci/openjdk:8-jdk-stretch
+
+    steps:
+
+      - checkout
+
+      # - run:
+      #     name: Generate cumulative pom.xml checksum
+      #     command: |
+      #       find . -type f -name "pom.xml" -exec sh -c "sha256sum {} >> ~/pom-checksum.tmp" \;
+      #       sort -o ~/pom-checksum ~/pom-checksum.tmp
+      #     when: always
+
+      - restore_cache:
+          key: store-webapp-sample-{{ checksum "~/pom" }}
+      
+      - run: mvn dependency:go-offline # gets the project dependencies
+      
+      - save_cache: # saves the project dependencies
+          paths:
+            - ~/.m2
+          key: store-webapp-sample-{{ checksum "pom.xml" }}
+      
+      - run: mvn package
+      
+      - store_test_results:
+          path: target/surefire-reports
+      
+      - store_artifacts:
+          path: target/store-webapp-sample-0.0.1.jar
