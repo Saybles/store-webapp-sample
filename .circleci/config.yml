@@ -4,6 +4,9 @@ parameters:
   branch_to_track:
     type: string
     default: "circleci"
+  build_name:
+    type: string
+    default: "store-webapp"
   s3_bucket:
     type: string
     default: "uzky-circleci-bucket"
@@ -30,16 +33,16 @@ jobs:
       #     when: always
 
       - restore_cache:
-          key: store-webapp-sample-{{ checksum "~/pom" }}
+          key: << pipeline.parameters.build_name >>-sample-{{ checksum "~/pom" }}
       
       - run: 
           name: Get project dependencies
           command: mvn dependency:go-offline
       
-      - save_cache: # saves the project dependencies
+      - save_cache:
           paths:
             - ~/.m2
-          key: store-webapp-sample-{{ checksum "pom.xml" }}
+          key: << pipeline.parameters.build_name >>-sample-{{ checksum "pom.xml" }}
       
       - run: 
           name: Make project build
@@ -49,7 +52,7 @@ jobs:
           path: target/surefire-reports
       
       - store_artifacts:
-          path: target/store-webapp.jar
+          path: target/<< pipeline.parameters.build_name >>.jar
 
       - run:
           name: Prepare for s3 placement
@@ -67,8 +70,8 @@ jobs:
             aws configure set aws_secret_access_key $CIRCLECI_FIRST_AWS_SAK
 
             cd target/
-            zip store-webapp.jar.zip store-webapp.jar
-            aws s3 cp store-webapp.jar.zip s3://<< pipeline.parameters.s3_bucket >>/
+            zip << pipeline.parameters.build_name >>.jar.zip << pipeline.parameters.build_name >>.jar
+            aws s3 cp << pipeline.parameters.build_name >>.jar.zip s3://<< pipeline.parameters.s3_bucket >>/
 
 
 workflows:
