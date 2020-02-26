@@ -22,18 +22,8 @@ jobs:
 
       - checkout
 
-      # - run:
-
-      ###
-      # - run:
-      #     name: Generate cumulative pom.xml checksum
-      #     command: |
-      #       find . -type f -name "pom.xml" -exec sh -c "sha256sum {} >> ~/pom-checksum.tmp" \;
-      #       sort -o ~/pom-checksum ~/pom-checksum.tmp
-      #     when: always
-
       - restore_cache:
-          key: << pipeline.parameters.build_name >>-sample-{{ checksum "~/pom" }}
+          key: store-webapp-sample-{{ checksum "pom.xml" }}
       
       - run: 
           name: Get project dependencies
@@ -42,7 +32,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.m2
-          key: << pipeline.parameters.build_name >>-sample-{{ checksum "pom.xml" }}
+          key: store-webapp-sample-{{ checksum "pom.xml" }}
       
       - run: 
           name: Make project build
@@ -55,7 +45,7 @@ jobs:
           path: target/<< pipeline.parameters.build_name >>.jar
 
       - run:
-          name: Prepare for s3 placement
+          name: Prepare for AWS S3 placement
           command: |
             sudo apt-get update -y
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -64,7 +54,7 @@ jobs:
             sudo apt install zip -y
 
       - run:
-          name: Send build to s3
+          name: Send build to AWS S3
           command: |
             aws configure set aws_access_key_id $CIRCLECI_FIRST_AWS_AKID
             aws configure set aws_secret_access_key $CIRCLECI_FIRST_AWS_SAK
