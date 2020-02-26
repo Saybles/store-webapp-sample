@@ -60,8 +60,9 @@ jobs:
             aws configure set aws_secret_access_key $CIRCLECI_FIRST_AWS_SAK
 
             cd target/
-            zip << pipeline.parameters.build_name >>.jar.zip << pipeline.parameters.build_name >>.jar
-            aws s3 cp << pipeline.parameters.build_name >>.jar.zip s3://<< pipeline.parameters.s3_bucket >>/
+            dt=$(date "+%d%m%Y%H%M%S")
+            zip "<< pipeline.parameters.build_name >>$dt.jar.zip" << pipeline.parameters.build_name >>.jar
+            aws s3 cp "<< pipeline.parameters.build_name >>$dt.jar.zip" s3://<< pipeline.parameters.s3_bucket >>/
 
 
 workflows:
